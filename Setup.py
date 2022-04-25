@@ -34,3 +34,9 @@ class CrispDm():
 
 		return model
 
+	def auswertung(self):
+		pass
+
+	def visuals(self):
+		pass
+
