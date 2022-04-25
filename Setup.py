@@ -1,3 +1,4 @@
+import pandas as pd
 class CrispDm():
 	def __init__(self):
 		pass
@@ -7,8 +8,8 @@ class CrispDm():
 		Laden der Daten
 		:return: loaded data, data will be stored in self.data as well
 		"""
-		from sklearn.datasets import load_breast_cancer
-		self.data = load_breast_cancer()
+		data = pd.read_csv("covtype.data")
+		self.data = data
 		return self.data
 
 	def data_understanding(self, data=None):
@@ -31,67 +32,5 @@ class CrispDm():
 	def modeling(self, x_train=None, y_train=None):
 		model = {}
 
-		from sklearn.ensemble import RandomForestClassifier
-		model_RF = RandomForestClassifier(n_estimators=100,
-										  max_depth=5
-										  )
-		model["model_RF"] = model_RF.fit(x_train, y_train)
-
-		from sklearn.tree import DecisionTreeClassifier
-		model_DT = DecisionTreeClassifier()
-		model["model_DT"] = model_DT.fit(x_train, y_train)
-
 		return model
 
-	def evaluation(self, model=None, X_eval=None, y_eval=None, feature_names=None):
-		CrispDm.evaluation_visual(self, model, X_eval, y_eval)
-		CrispDm.evaluation_kpi(self, model, X_eval, y_eval)
-
-	def evaluation_visual(self, model=None, X_eval=None, y_eval=None):
-		CrispDm.evaluation_visual_feature_importance(self, model=model, X_eval=X_eval, y_eval=y_eval)
-		for model_ in [model['model_RF'].estimators_[1],
-					   model['model_DT']
-					   ]:
-			CrispDm.evaluation_visual_random_forrest(self, model=model_, X_eval=X_eval, y_eval=y_eval,
-													 title=str(model_))
-
-	def evaluation_visual_feature_importance(self, model=None, X_eval=None, y_eval=None):
-		import matplotlib.pyplot as plt
-		import numpy as np
-		print("plotting feature importance")
-		model_ = model['model_RF']
-		n_features = X_eval.shape[1]
-		plt.barh(np.arange(n_features), model_.feature_importances_, align='center')
-		plt.yticks(np.arange(n_features), X_eval.columns)
-		plt.xlabel("Feature importance")
-		plt.ylabel("Feature")
-		plt.ylim(-1, n_features)
-		plt.tight_layout()
-		plt.show()
-
-	def evaluation_visual_random_forrest(self, model=None, X_eval=None, y_eval=None, title=""):
-		import matplotlib.pyplot as plt
-		from sklearn.tree import plot_tree
-		from sklearn.tree import export_text
-
-		plt.figure(figsize=(12, 12), dpi=216)
-		plot_tree(model, filled=True)
-		plt.title(F"{title}")
-		plt.show()
-
-		try:
-			print(export_text(model, feature_names=list(X_eval.columns)))
-		except:
-			pass
-
-	def evaluation_kpi(self, model=None, X_eval=None, y_eval=None):
-		# test
-		model_ = model['model_RF']
-		score_eval = model_.score(X_eval, y_eval)
-		score_model = model_.score(X_train, y_train)
-
-		print(
-			F"Mean accuracy for evaluation/ model set: {score_eval:.4}/ {score_model:.4} ({score_eval - score_model:.4})")
-
-	def deployment_and_save(self, data=None):
-		pass
