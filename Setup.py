@@ -4,13 +4,9 @@ class CrispDm():
 		pass
 
 	def load(self):
-		"""
-		Laden der Daten
-		:return: loaded data, data will be stored in self.data as well
-		"""
 		data = pd.read_csv("covtype.data")
 		self.data = data
-		return self.data
+		print(data)
 
 	def data_understanding(self, data=None):
 		pass
@@ -40,3 +36,5 @@ class CrispDm():
 	def visuals(self):
 		pass
 
+c = CrispDm()
+c.load()
